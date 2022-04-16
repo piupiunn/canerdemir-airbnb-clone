@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { Search } from "@styled-icons/evaicons-solid/Search";
@@ -23,12 +23,25 @@ export default function Header() {
   const [bebekler, setBebekler] = useState(0);
   const [hayvanlar, setHayvanlar] = useState(0);
 
+  const [show, handleShow] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        handleShow(true);
+      } else handleShow(false);
+    });
+    return () => {
+      window.removeEventListener("scroll", null);
+    };
+  }, []);
+
   return (
     <header style={{ height: "646.81px" }}>
       <TopInfo>
         <h4>
           COVID-19 çerçevesinde aldığımız önlemler hakkındaki en güncel
-          bilgileri öğrenin
+          bilgileri öğreninn
         </h4>
       </TopInfo>
       {/* Left */}
@@ -46,104 +59,115 @@ export default function Header() {
         </LogoDiv>
         {/* Middle */}
 
-        <DetailedSearchBar onClick={(e) => setBigSearchIcon(true)}>
-          <Titles>
-            <h3>Konaklama yerleri</h3>
-            <h3>Deneyimler</h3>
-            <h3>Çevrimiçi deneyimler</h3>
-          </Titles>
-          <Bar>
-            <Location>
-              <h4>Konum</h4>
-              <p>Nereye gidiyorsunuz?</p>
-            </Location>
-            <EnterDate>
-              <h4>Giriş</h4>
-              <p>Tarih ekleyin</p>
-              <DateRangePickerCustom
-                value={value}
-                onChange={setValue}
-                amountOfMonths={2}
-              />
-            </EnterDate>
-            <OutDate>
-              <h4>Çıkış</h4>
-              <p>Tarih ekleyin</p>
-            </OutDate>
-            <Guests bigSearchIcon={bigSearchIcon}>
-              <div>
-                <h4>Misafirler</h4>
-                <p>Misafir ekleyin</p>
-              </div>
-              <PopoverIcon
-                opened={opened}
-                onClose={() => setOpened(false)}
-                target={<Guests onClick={() => setOpened(true)} />}
-                position="bottom"
-              >
-                <PopoverGuestsDetails>
-                  <GuestsInfo>
-                    <div>
-                      <h5>Yetişkinler</h5>
-                      <p>13 ve üzeri yaştakiler</p>
-                    </div>
-                    <div>
-                      <MinusIcon
-                        onClick={() => setYetiskinler(yetiskinler - 1)}
-                      />
-                      {yetiskinler}
-                      <PlusIcon
-                        onClick={() => setYetiskinler(yetiskinler + 1)}
-                      />
-                    </div>
-                  </GuestsInfo>
-                  <GuestsInfo>
-                    <div>
-                      <h5>Çocuklar</h5>
-                      <p>yaş aralığı 2-12</p>
-                    </div>
-                    <div>
-                      {" "}
-                      <MinusIcon onClick={() => setCocuklar(cocuklar - 1)} />
-                      {cocuklar}
-                      <PlusIcon
-                        onClick={() => setCocuklar(cocuklar + 1)}
-                      />{" "}
-                    </div>
-                  </GuestsInfo>
-                  <GuestsInfo>
-                    <div>
-                      <h5>Bebekler</h5>
-                      <p>2 yaş ve altı</p>
-                    </div>
-                    <div>
-                      <MinusIcon onClick={() => setBebekler(bebekler - 1)} />
-                      {bebekler}
-                      <PlusIcon onClick={() => setBebekler(bebekler + 1)} />
-                    </div>
-                  </GuestsInfo>
-                  <GuestsInfo>
-                    <div>
-                      <h5>Evcil Hayvanlar</h5>
-                      <p style={{ width: "200px" }}>
-                        Yanınızda hizmet hayvanı mı getiriyorsunuz?
-                      </p>
-                    </div>
-                    <div>
-                      <MinusIcon onClick={() => setHayvanlar(hayvanlar - 1)} />
-                      {hayvanlar}
-                      <PlusIcon onClick={() => setHayvanlar(hayvanlar + 1)} />
-                    </div>
-                  </GuestsInfo>
-                </PopoverGuestsDetails>
-              </PopoverIcon>
-              <SearchButton bigSearchIcon={bigSearchIcon}>
-                <SearchIcon /> {bigSearchIcon ? "Arama" : ""}
-              </SearchButton>
-            </Guests>
-          </Bar>
-        </DetailedSearchBar>
-        <button onClick={() => setBigSearchIcon(false)}>setFALSe</button>
+        {!show && (
+          <DetailedSearchBar onClick={(e) => setBigSearchIcon(true)}>
+            <Titles>
+              <h3>Konaklama yerleri</h3>
+              <h3>Deneyimler</h3>
+              <h3>Çevrimiçi deneyimler</h3>
+            </Titles>
+            <Bar>
+              <Location>
+                <h4>Konum</h4>
+                <p>Nereye gidiyorsunuz?</p>
+              </Location>
+              <EnterDate>
+                <h4>Giriş</h4>
+                <p>Tarih ekleyin</p>
+                <DateRangePickerCustom
+                  value={value}
+                  onChange={setValue}
+                  amountOfMonths={2}
+                />
+              </EnterDate>
+              <OutDate>
+                <h4>Çıkış</h4>
+                <p>Tarih ekleyin</p>
+              </OutDate>
+              <Guests bigSearchIcon={bigSearchIcon}>
+                <div>
+                  <h4>Misafirler</h4>
+                  <p>Misafir ekleyin</p>
+                </div>
+                <PopoverIcon
+                  opened={opened}
+                  onClose={() => setOpened(false)}
+                  target={<Guests onClick={() => setOpened(true)} />}
+                  position="bottom"
+                >
+                  <PopoverGuestsDetails>
+                    <GuestsInfo>
+                      <div>
+                        <h5>Yetişkinler</h5>
+                        <p>13 ve üzeri yaştakiler</p>
+                      </div>
+                      <div>
+                        <MinusIcon
+                          onClick={() => setYetiskinler(yetiskinler - 1)}
+                        />
+                        {yetiskinler}
+                        <PlusIcon
+                          onClick={() => setYetiskinler(yetiskinler + 1)}
+                        />
+                      </div>
+                    </GuestsInfo>
+                    <GuestsInfo>
+                      <div>
+                        <h5>Çocuklar</h5>
+                        <p>yaş aralığı 2-12</p>
+                      </div>
+                      <div>
+                        {" "}
+                        <MinusIcon onClick={() => setCocuklar(cocuklar - 1)} />
+                        {cocuklar}
+                        <PlusIcon
+                          onClick={() => setCocuklar(cocuklar + 1)}
+                        />{" "}
+                      </div>
+                    </GuestsInfo>
+                    <GuestsInfo>
+                      <div>
+                        <h5>Bebekler</h5>
+                        <p>2 yaş ve altı</p>
+                      </div>
+                      <div>
+                        <MinusIcon onClick={() => setBebekler(bebekler - 1)} />
+                        {bebekler}
+                        <PlusIcon onClick={() => setBebekler(bebekler + 1)} />
+                      </div>
+                    </GuestsInfo>
+                    <GuestsInfo>
+                      <div>
+                        <h5>Evcil Hayvanlar</h5>
+                        <p style={{ width: "200px" }}>
+                          Yanınızda hizmet hayvanı mı getiriyorsunuz?
+                        </p>
+                      </div>
+                      <div>
+                        <MinusIcon
+                          onClick={() => setHayvanlar(hayvanlar - 1)}
+                        />
+                        {hayvanlar}
+                        <PlusIcon onClick={() => setHayvanlar(hayvanlar + 1)} />
+                      </div>
+                    </GuestsInfo>
+                  </PopoverGuestsDetails>
+                </PopoverIcon>
+                <SearchButton bigSearchIcon={bigSearchIcon}>
+                  <SearchIcon /> {bigSearchIcon ? "Arama" : ""}
+                </SearchButton>
+              </Guests>
+            </Bar>
+          </DetailedSearchBar>
+        )}
+        {show && (
+          <SecondBar>
+            <p>Aramanıza başlayın</p>
+            <SecondSearch>
+              <SecondSearchIcon />
+            </SecondSearch>
+          </SecondBar>
+        )}
         {/* Right */}
 
         <RightSection>
@@ -165,6 +189,7 @@ export default function Header() {
         </h6>
         <NavBottomButton>Daha fazla bilgi edinin</NavBottomButton>
       </BottomInfo>
+      <button onClick={() => setBigSearchIcon(false)}>setFALSe</button>
     </header>
   );
 }
@@ -184,12 +209,14 @@ const TopInfo = styled.div`
 }
 const Navbar = styled.div`
   display: flex;
-  position: sticky;
-  width: 100%;
+  position: fixed;
 
+  width: 100%;
+  top: 0;
+  visibility: ${(props) => (props.show ? "false" : "true")};
   padding-left: 21px;
   padding-right: 21px;
-  z-index: 50;
+  z-index: 100;
 
   background-color: #000000;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -440,4 +467,45 @@ const MinusIcon = styled(MinusCircle)`
   width: 25px;
   height: 25px;
   color: gray;
+`;
+//
+{
+  /**Second-Bar */
+}
+//
+const SecondBar = styled.button`
+  width: 300px;
+  height: 48px;
+  border: 1px solid white;
+  margin-top: 20px;
+  margin-left: 100px;
+  border-radius: 40px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 5%);
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  p {
+    font-size: 16px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+  }
+  visibility: ${(props) => (props.show ? "true" : "false")};
+`;
+
+const SecondSearch = styled.div`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e11960;
+  margin: 7px 7px 7px;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+`;
+const SecondSearchIcon = styled(SearchIcon)`
+  color: white;
+  height: 12px;
+  width: 12px;
+
+  display: block;
 `;
