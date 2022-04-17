@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { Search } from "@styled-icons/evaicons-solid/Search";
 import { World } from "@styled-icons/typicons/World";
 import { ThreeBars } from "@styled-icons/octicons/ThreeBars";
@@ -23,30 +23,36 @@ export default function Header() {
   const [bebekler, setBebekler] = useState(0);
   const [hayvanlar, setHayvanlar] = useState(0);
 
-  const [show, handleShow] = useState(false);
+  const [show, setShow] = useState(false);
+  const [bigNav, setBigNav] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 50) {
-        handleShow(true);
-      } else handleShow(false);
+      if (window.scrollY > 0) {
+        setShow(true);
+      } else setShow(false);
     });
     return () => {
       window.removeEventListener("scroll", null);
     };
   }, []);
-
+  const handleClick = () => {
+    setShow(false);
+    setBigNav(true);
+  };
   return (
     <header style={{ height: "646.81px" }}>
-      <TopInfo>
-        <h4>
-          COVID-19 çerçevesinde aldığımız önlemler hakkındaki en güncel
-          bilgileri öğreninn
-        </h4>
-      </TopInfo>
+      {
+        <TopInfo>
+          <h4>
+            COVID-19 çerçevesinde aldığımız önlemler hakkındaki en güncel
+            bilgileri öğreninn
+          </h4>
+        </TopInfo>
+      }
       {/* Left */}
 
-      <Navbar>
+      <Navbar show={show} bigNav={bigNav}>
         <LogoDiv>
           <StyledImage
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png"
@@ -59,9 +65,12 @@ export default function Header() {
         </LogoDiv>
         {/* Middle */}
 
-        {!show && (
-          <DetailedSearchBar onClick={(e) => setBigSearchIcon(true)}>
-            <Titles>
+        {
+          <DetailedSearchBar
+            show={show}
+            onClick={(e) => setBigSearchIcon(true)}
+          >
+            <Titles bigNav={bigNav}>
               <h3>Konaklama yerleri</h3>
               <h3>Deneyimler</h3>
               <h3>Çevrimiçi deneyimler</h3>
@@ -113,7 +122,7 @@ export default function Header() {
                     </GuestsInfo>
                     <GuestsInfo>
                       <div>
-                        <h5>Çocuklar</h5>
+                        <h5>Çocuklarr</h5>
                         <p>yaş aralığı 2-12</p>
                       </div>
                       <div>
@@ -159,9 +168,9 @@ export default function Header() {
               </Guests>
             </Bar>
           </DetailedSearchBar>
-        )}
+        }
         {show && (
-          <SecondBar>
+          <SecondBar onClick={handleClick}>
             <p>Aramanıza başlayın</p>
             <SecondSearch>
               <SecondSearchIcon />
@@ -189,7 +198,8 @@ export default function Header() {
         </h6>
         <NavBottomButton>Daha fazla bilgi edinin</NavBottomButton>
       </BottomInfo>
-      <button onClick={() => setBigSearchIcon(false)}>setFALSe</button>
+      <button onClick={() => setBigSearchIcon(false)}>setFALSEe</button>
+      <button onClick={() => setBigNav(false)}>setFALSEe</button>
     </header>
   );
 }
@@ -210,15 +220,19 @@ const TopInfo = styled.div`
 const Navbar = styled.div`
   display: flex;
   position: fixed;
-
-  width: 100%;
+  background-color: ${(props) => (props.show ? "#FFFFFF" : "#000000")};
+  background-color: ${(props) => (props.bigNav ? "#FFFFFF" : "#000000")};
+  transition: color 0.5s ease-in;
+  transition: background 0.25s ease-out;
   top: 0;
-  visibility: ${(props) => (props.show ? "false" : "true")};
+  width: 100%;
+  height: 80px;
+  height: ${(props) => (props.bigNav ? "180px" : "80px")};
+
   padding-left: 21px;
   padding-right: 21px;
-  z-index: 100;
-
-  background-color: #000000;
+  z-index: 50;
+  border: ${(props) => (props.bigNav ? "1px solid black" : "")};
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   justify-content: space-evenly;
   padding: 5px;
@@ -233,6 +247,8 @@ const Navbar = styled.div`
 }
 const StyledImage = styled(Image)`
   cursor: pointer;
+  color: ${(props) => (props.show ? "#FFFFFF" : "")};
+  transition: color 0.5s ease-in;
 `;
 const LogoDiv = styled.div`
   margin-bottom: 20px;
@@ -241,8 +257,13 @@ const LogoDiv = styled.div`
 {
   /**Middle Section */
 }
+
 const DetailedSearchBar = styled.div`
   margin-left: 10%;
+  opacity: ${(props) => (props.show ? "0" : "1")};
+  transform: ${(props) => (props.show ? "translate(0%, -50%)" : "")};
+  transform: ${(props) => (props.show ? "scale(0.2)" : "")};
+  transition: all 0.5s;
 
   h4,
   p {
@@ -258,19 +279,20 @@ const DetailedSearchBar = styled.div`
 const Titles = styled.div`
   display: flex;
   justify-content: space-around;
-  background-color: black;
-  color: white;
+
+  color: ${(props) => (props.bigNav ? "#000000" : "#FFFFFF")};
   padding-bottom: 0px;
   font-size: 13px;
   margin-left: 20%;
   margin-right: 20%;
+  background-color: ${(props) => (props.bigNav ? "#FFFFFF" : "#000000")};
 `;
 const Bar = styled.div`
   display: flex;
   grid-column: 4;
   width: 850px;
   height: 66px;
-
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 5%) !important;
   border-radius: 50px;
   background-color: #ffffff;
 `;
@@ -354,6 +376,7 @@ const SearchIcon = styled(Search)`
 {
   /**Right Section  */
 }
+//
 const RightSection = styled.div`
   width: 250px;
   height: 80px;
@@ -401,7 +424,7 @@ const BottomInfo = styled.div`
   border-radius: 12px;
   display: grid;
   grid-template-columns: 1fr;
-  margin-top: 50px;
+  margin-top: 150px;
   box-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -474,6 +497,7 @@ const MinusIcon = styled(MinusCircle)`
 }
 //
 const SecondBar = styled.button`
+  position: absolute;
   width: 300px;
   height: 48px;
   border: 1px solid white;
@@ -489,7 +513,8 @@ const SecondBar = styled.button`
     padding-bottom: 5px;
     padding-left: 5px;
   }
-  visibility: ${(props) => (props.show ? "true" : "false")};
+
+  visibility: ${(props) => (props.show ? "0" : "1")};
 `;
 
 const SecondSearch = styled.div`
