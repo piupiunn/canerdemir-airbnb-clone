@@ -23,21 +23,20 @@ export default function Header() {
   const [bebekler, setBebekler] = useState(0);
   const [hayvanlar, setHayvanlar] = useState(0);
 
-  const [show, setShow] = useState(false);
+  const [showSecondBar, setShowSecondBar] = useState(false);
   const [bigNav, setBigNav] = useState(false);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 0) {
-        setShow(true);
-      } else setShow(false);
+      window.scrollY > 0 ? setShowSecondBar(true) : setShowSecondBar(false),
+        setBigNav(false);
     });
     return () => {
       window.removeEventListener("scroll", null);
     };
   }, []);
-  const handleClick = () => {
-    setShow(false);
+  const getBigNavBar = () => {
+    setShowSecondBar(false);
     setBigNav(true);
   };
   return (
@@ -52,7 +51,7 @@ export default function Header() {
       }
       {/* Left */}
 
-      <Navbar show={show} bigNav={bigNav}>
+      <Navbar showSecondBar={showSecondBar} bigNav={bigNav}>
         <LogoDiv>
           <StyledImage
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Airbnb_Logo_B%C3%A9lo.svg/2560px-Airbnb_Logo_B%C3%A9lo.svg.png"
@@ -67,7 +66,7 @@ export default function Header() {
 
         {
           <DetailedSearchBar
-            show={show}
+            showSecondBar={showSecondBar}
             onClick={(e) => setBigSearchIcon(true)}
           >
             <Titles bigNav={bigNav}>
@@ -95,7 +94,7 @@ export default function Header() {
               </OutDate>
               <Guests bigSearchIcon={bigSearchIcon}>
                 <div>
-                  <h4>Misafirler</h4>
+                  <h4>Misafirlerr</h4>
                   <p>Misafir ekleyin</p>
                 </div>
                 <PopoverIcon
@@ -103,6 +102,10 @@ export default function Header() {
                   onClose={() => setOpened(false)}
                   target={<Guests onClick={() => setOpened(true)} />}
                   position="bottom"
+                  styles={{
+                    popover: { borderRadius: "50px" },
+                    body: { border: "none" },
+                  }}
                 >
                   <PopoverGuestsDetails>
                     <GuestsInfo>
@@ -169,8 +172,8 @@ export default function Header() {
             </Bar>
           </DetailedSearchBar>
         }
-        {show && (
-          <SecondBar onClick={handleClick}>
+        {showSecondBar && (
+          <SecondBar onClick={getBigNavBar}>
             <p>Aramanıza başlayın</p>
             <SecondSearch>
               <SecondSearchIcon />
@@ -220,8 +223,9 @@ const TopInfo = styled.div`
 const Navbar = styled.div`
   display: flex;
   position: fixed;
-  background-color: ${(props) => (props.show ? "#FFFFFF" : "#000000")};
-  background-color: ${(props) => (props.bigNav ? "#FFFFFF" : "#000000")};
+  background-color: ${(props) =>
+    props.showSecondBar || props.bigNav ? "#FFFFFF" : "#000000"};
+
   transition: color 0.5s ease-in;
   transition: background 0.25s ease-out;
   top: 0;
@@ -247,7 +251,7 @@ const Navbar = styled.div`
 }
 const StyledImage = styled(Image)`
   cursor: pointer;
-  color: ${(props) => (props.show ? "#FFFFFF" : "")};
+  color: ${(props) => (props.showSecondBar ? "#FFFFFF" : "")};
   transition: color 0.5s ease-in;
 `;
 const LogoDiv = styled.div`
@@ -260,9 +264,9 @@ const LogoDiv = styled.div`
 
 const DetailedSearchBar = styled.div`
   margin-left: 10%;
-  opacity: ${(props) => (props.show ? "0" : "1")};
-  transform: ${(props) => (props.show ? "translate(0%, -50%)" : "")};
-  transform: ${(props) => (props.show ? "scale(0.2)" : "")};
+  opacity: ${(props) => (props.showSecondBar ? "0" : "1")};
+  transform: ${(props) => (props.showSecondBar ? "translate(0%, -50%)" : "")};
+  transform: ${(props) => (props.showSecondBar ? "scale(0.2)" : "")};
   transition: all 0.5s;
 
   h4,
@@ -480,16 +484,26 @@ const GuestsInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid gray;
+  h5 {
+    margin-bottom: 1px;
+  }
+  p {
+    margin-top: 5px;
+    color: gray;
+  }
 `;
 const PlusIcon = styled(PlusCircle)`
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 40px;
   color: gray;
+  margin-left: 10px;
 `;
 const MinusIcon = styled(MinusCircle)`
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 40px;
   color: gray;
+  margin-right: 10px;
 `;
 //
 {
@@ -514,7 +528,7 @@ const SecondBar = styled.button`
     padding-left: 5px;
   }
 
-  visibility: ${(props) => (props.show ? "0" : "1")};
+  visibility: ${(props) => (props.showSecondBar ? "0" : "1")};
 `;
 
 const SecondSearch = styled.div`
