@@ -150,7 +150,7 @@ export default function Header() {
                     </GuestsInfo>
                     <GuestsInfo>
                       <div>
-                        <h5>Evcil Hayvanlar</h5>
+                        <h5>Evcil Hayvanlaar</h5>
                         <p style={{ width: "200px" }}>
                           Yanınızda hizmet hayvanı mı getiriyorsunuz?
                         </p>
@@ -420,8 +420,8 @@ const UserCircleIcon = styled(UserCircle)`
 }
 //
 const BottomInfo = styled.div`
-  width: 1061px;
-  height: 328.81px;
+  width: 1700px;
+  height: 450px;
   padding-left: 80px;
   padding-right: 80px;
   background-color: rgb(255, 56, 92);
@@ -434,11 +434,12 @@ const BottomInfo = styled.div`
   margin-right: auto;
   justify-items: center;
   h6 {
-    font-size: 38px;
+    font-size: 45px;
     color: white;
     font-weight: 600;
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: -100px;
+    margin-top: 150px;
     justify-content: center;
   }
 `;
